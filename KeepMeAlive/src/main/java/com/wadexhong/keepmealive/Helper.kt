@@ -1,6 +1,16 @@
 package com.wadexhong.keepmealive
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.util.Log
+import java.util.*
+
 object Helper {
+
+    private const val TAG = "KeepMeAlive"
 
     // Huawei(華為)
     private val BRAND_HUAWEI = "huawei"
@@ -113,4 +123,66 @@ object Helper {
             CASES_SAMSUNG,
             CASES_ONE_PLUS
         ).flatten()
+
+    fun launchPermissionSettingPage(context: Context): Boolean {
+        return launch(context, getCasesByBrand())
+    }
+
+    fun isCustomPermissionSettingSupport(context: Context): Boolean {
+        return isPackageExists(context, getCasesByBrand())
+    }
+
+    private fun launch(context: Context, cases: List<Pair<String, String>>): Boolean {
+        return if (isPackageExists(context, cases)) {
+            startIntentByRecursive(context, cases)
+        } else {
+            false
+        }
+    }
+
+    private fun isPackageExists(context: Context, pairs: List<Pair<String, String>>): Boolean {
+        val pm = context.packageManager
+        for (pair in pairs) {
+            val intent = Intent().setComponent(ComponentName(pair.first, pair.second))
+            if (pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null)
+                return true
+        }
+        return false
+    }
+
+    private fun getCasesByBrand(): List<Pair<String, String>> =
+        when (Build.BRAND.toLowerCase(Locale.getDefault())) {
+            BRAND_HUAWEI -> CASES_HUAWEI
+            BRAND_XIAOMI, BRAND_XIAOMI_REDMI -> CASES_XIAOMI
+            BRAND_OPPO -> CASES_OPPO
+            BRAND_VIVO -> CASES_VIVO
+            BRAND_HONOR -> CASES_HONOR
+            BRAND_LETV -> CASES_LETV
+            BRAND_NOKIA -> CASES_NOKIA
+            BRAND_SAMSUNG -> CASES_SAMSUNG
+            BRAND_ONE_PLUS -> CASES_ONE_PLUS
+            BRAND_ASUS -> CASES_ASUS
+            else -> emptyList()
+        }
+
+    private fun startIntentByRecursive(
+        context: Context,
+        cases: List<Pair<String, String>>
+    ): Boolean {
+        if (cases.isEmpty())
+            return false
+
+        val case = cases.first()
+
+        try {
+            val intent = Intent()
+            intent.component = ComponentName(case.first, case.second)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            context.startActivity(intent)
+            return true
+        } catch (exception: Exception) {
+            Log.d(TAG, "Intent failed for pkg: ${case.first}, clz: ${case.second}", exception)
+            return startIntentByRecursive(context, cases.drop(1))
+        }
+    }
 }
