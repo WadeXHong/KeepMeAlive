@@ -128,7 +128,7 @@ object Helper {
         return launch(context, getCasesByBrand())
     }
 
-    fun isCustomPermissionSettingSupport(context: Context): Boolean {
+    fun isPermissionSettingSupport(context: Context): Boolean {
         return isPackageExists(context, getCasesByBrand())
     }
 

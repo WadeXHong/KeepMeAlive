@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (Helper.isCustomPermissionSettingSupport(this)) {
+        if (Helper.isPermissionSettingSupport(this)) {
             if (Helper.launchPermissionSettingPage(this)) {
                 Toast.makeText(
                     this,
