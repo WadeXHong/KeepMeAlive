@@ -1,0 +1,3 @@
+include ':KeepMeAlive'
+include ':app'
+rootProject.name = "KeepMeAlive"
