@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.wadexhong.keepmealive"
+        applicationId "com.wadexhong.keepmealivesample"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1

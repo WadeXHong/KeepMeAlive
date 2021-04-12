@@ -1,8 +1,9 @@
-package com.wadexhong.keepmealive
+package com.wadexhong.keepmealivesample
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.wadexhong.keepmealive.Helper
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
